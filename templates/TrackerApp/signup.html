@@ -1,0 +1,48 @@
+{% extends 'TrackerApp/base.html' %}
+{% block Content %}
+<div class="container">
+    <div class="row justify-content-center p-3">
+
+        <form class="col-lg-4 col-md-8 col-sm-12 p-4 border border-primary rounded" action=""  method="POST">
+            {% if error == True %}<div class="alert alert-success" role="alert">{{message}}</div>{% endif %}
+            {% csrf_token %}
+            <h1 class="h1">Sign Up</h1>
+            <div class="form-group">
+                <label for="exampleInputUsername" class="py-2">Enter Username</label>
+                <input type="text" class="form-control" id="exampleInputUsername" placeholder="Enter username" name="username">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1" class="py-2">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1" class="py-2">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword2" class="py-2">Confirm Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Confirm Password" name="password1">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputFirstName" class="py-2">Enter First Name</label>
+                <input type="text" class="form-control" id="exampleInputFirstName" placeholder="Enter First Name" name="first_name">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputLastName" class="py-2">Enter Last Name</label>
+                <input type="text" class="form-control" id="exampleInputLastName" placeholder="Enter Last Name" name="last_name">
+            </div>
+            <button type="submit" class="btn btn-primary my-3">Submit</button>
+        </form>    
+    </div>
+</div>
+{% endblock %}
+{% block Script %}
+<script>
+    document.getElementById("sign_up").innerHTML = "Sign In"
+    var url = document.getElementById("sign_up").href
+    console.log(url)
+    console.log(url.slice(0, url.length-7))
+    document.getElementById("sign_up").href = url.slice(0, url.length-7) + 'signin/' 
+</script>
+{% endblock %}
