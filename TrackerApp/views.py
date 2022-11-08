@@ -29,7 +29,7 @@ def signUp(request):
             user.set_password(password)
             user.save()
             context = {
-                'error':False,
+                'error':True,
                 'message':'Your account has been created succcesfully. Please vist the login page to login to your account.'
             }
 
