@@ -1,9 +1,15 @@
 {% extends 'TrackerApp/base.html' %}
 {% block Content %}
     <div class="container">
+      <div class="row">
+        <h1 class="h1 col-6">Stocks</h1>
+        <div class="col-6 d-flex justify-content-end align-items-center">
+          <button type="button" class="btn btn-primary mx-2" id="prev_btn">Prev</button>
+          <button type="button" class="btn btn-primary" id="next_btn">Next</button>
+        </div>
+      </div>
         <div class="row py-4">
             <table class="table table-striped table-light">
-                <h1 class="h1">Stocks</h1>
                 <thead>
                   <tr>
                     <th scope="col">Sr. No.</th>
@@ -65,10 +71,6 @@
               </div>
             </form>
           </div>
-          <div class="modal-footer">
-              
-
-          </div>
         </div>
       </div>
     </div>
@@ -81,6 +83,26 @@
         document.getElementById("stock_symbol").value = e.target.id
     }
     btns.forEach((btn) => btn.addEventListener('click', setStockID));
+
+    document.getElementById("prev_btn").addEventListener('click', () => {
+      url = window.location.href
+      curr_page = parseInt(url.split('/')[5])
+      new_url = url.split('/').slice(0,5).join('/')
+      console.log(new_url)
+      if(curr_page > 1){  
+        next_page = curr_page - 1 
+        window.location.href = new_url + '/' + next_page
+      }
+    })
+
+    document.getElementById("next_btn").addEventListener('click', () => {
+      url = window.location.href
+      curr_page = parseInt(url.split('/')[5])
+      new_url = url.split('/').slice(0,5).join('/')
+      console.log(new_url)
+      next_page = 1 + curr_page 
+      window.location.href = new_url + '/' + next_page
+    })
 </script>
       
 {% endblock %}

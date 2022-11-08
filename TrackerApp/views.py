@@ -51,7 +51,7 @@ def signIn(request):
             if user is not None:
                 login(request, user)
                 context['message'] = 'You have successfully signed in!'
-                return redirect(dashboard)
+                return redirect(dashboard, page=1)
             else:
                 context['error'] = True
                 context['message'] = 'Incorrect Username or Password'
@@ -62,7 +62,7 @@ def signIn(request):
     return render(request, 'TrackerApp/signin.html', context)
 
 @login_required
-def dashboard(request):
+def dashboard(request, page):
     context = {}
     try:
         if request.method == 'POST':
@@ -76,12 +76,12 @@ def dashboard(request):
                 stock.save()
             watchlist.stocks.add(stock)
             watchlist.save()
-            return redirect('dashboard')
+            return redirect('dashboard', page=1)
 
         response = requests.get('https://cloud.iexapis.com/stable/tops?token=pk_aee9f5a22c404b45a8230642120370e9')
         # print(response.json()[:10])
         stocks = response.json()
-        context['stocks'] = stocks[:10]
+        context['stocks'] = stocks[page*10-10:10*page]
         watchlists = WatchList.objects.filter(owner=request.user).values_list('id','title')
         context['watchlists'] = watchlists
     except Exception as e:
@@ -101,12 +101,20 @@ def watchLists(request):
     context['error'] = False
     try:
         if request.method == 'POST':
-            title = request.POST.get('title')
-            desc = request.POST.get('desc')
-            watchlist = WatchList.objects.create(title=title, desc=desc, owner=request.user)
-            watchlist.save()
-            context['message'] = "Your watchlist has been created successfully."
-            return redirect('watch_lists')
+            request_type = request.POST.get('request_type')
+            if request_type == 'post':
+                title = request.POST.get('title')
+                desc = request.POST.get('desc')
+                watchlist = WatchList.objects.create(title=title, desc=desc, owner=request.user)
+                watchlist.save()
+                context['message'] = "Your watchlist has been created successfully."
+                return redirect('watch_lists')
+            elif request_type == 'delete':
+                watchlist_id = request.POST.get('watchlist_id')
+                print(watchlist_id)
+                watchlist = WatchList.objects.get(id=watchlist_id)
+                watchlist.delete()
+                return redirect('watch_lists')
         watchlist = WatchList.objects.filter(owner=request.user)
         context['watchlist'] = watchlist
     except Exception as e:
@@ -150,3 +158,26 @@ def watchList(request, pk):
         context['message'] = str(e)
     # print(context)
     return render(request, 'TrackerApp/watchlist.html', context)
+
+@login_required
+def stock(request, sym):
+    context = {}
+    context['error'] = False
+    try:
+        print(1)
+        stock = Stock.objects.get(symbol=sym)
+        response = requests.get(f'https://cloud.iexapis.com/stable/stock/{stock.symbol}/quote?token=pk_aee9f5a22c404b45a8230642120370e9')
+        data = response.json()
+        response = requests.get(f'https://cloud.iexapis.com/stable/stock/{stock.symbol}/company?token=pk_aee9f5a22c404b45a8230642120370e9')
+        context['company'] = response.json()
+        print(response.json())
+        context['stock'] = []
+        for item in data:
+            context['stock'].append([item,data[item]])
+        print(context)
+    except Exception as e:
+        context['error'] = True
+        context['message'] = str(e)
+        print(str(e))
+    return render(request, 'TrackerApp/stock.html', context)
+

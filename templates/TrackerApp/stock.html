@@ -1,0 +1,26 @@
+{% extends 'TrackerApp/base.html' %}
+{% block Content %}
+<div class="container">
+    <div class="row">
+        <table class="table table-striped table-light">
+            <h1 class="h1 py-3">{{company.companyName}}</h1>
+            <thead>
+              <tr>
+                <th scope="col">Sr. No.</th>
+                <th scope="col">Property</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for prop in stock %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{prop.0}}</td>
+                    <td>{{prop.1}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+    </div>
+</div>
+{% endblock %}

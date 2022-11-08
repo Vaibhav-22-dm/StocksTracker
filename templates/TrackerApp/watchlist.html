@@ -14,7 +14,8 @@
                     <th scope="col">Ask Price</th>
                     <th scope="col">Last Sale Price</th>
                     <th scope="col">Volume</th>
-                    <th scope="col">Remove from Watchlist</th>
+                    <th scope="col">Remove</th>
+                    <th scope="col">View</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -32,6 +33,9 @@
                             <button type="button" class="btn btn-danger remove_btns" data-toggle="modal" data-target="#exampleModal" id="{{stock.id}}">
                                Remove
                             </button>
+                        </td>
+                        <td>
+                            <a href="{% url 'stock' stock.symbol %}"><button class="btn btn-success">View</button></a>
                         </td>
                   </tr>
                   {% endfor %}
