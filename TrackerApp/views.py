@@ -61,7 +61,7 @@ def signIn(request):
         context['message'] = str(e)
     return render(request, 'TrackerApp/signin.html', context)
 
-@login_required
+@login_required(login_url='../../../tracker/signin/')
 def dashboard(request, page):
     context = {}
     try:
@@ -95,7 +95,7 @@ def signOut(request):
     logout(request)
     return redirect('sign_in')
 
-@login_required
+@login_required(login_url='../../tracker/signin/')
 def watchLists(request):
     context = {}
     context['error'] = False
@@ -122,7 +122,7 @@ def watchLists(request):
         context['message'] = str(e)
     return render(request, 'TrackerApp/watchlists.html', context)
 
-@login_required
+@login_required(login_url='../../../tracker/signin/')
 def watchList(request, pk):
     context = {}
     context['error'] = False
@@ -159,7 +159,8 @@ def watchList(request, pk):
     # print(context)
     return render(request, 'TrackerApp/watchlist.html', context)
 
-@login_required
+
+@login_required(login_url='../../../tracker/signin/')
 def stock(request, sym):
     context = {}
     context['error'] = False
